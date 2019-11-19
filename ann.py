@@ -11,7 +11,8 @@ def diff_sigmoid(z):
 
 
 class ANN:
-    def __init__(self, define):
+    def __init__(self, define, learning_rate):
+        self.learning_rate = learning_rate
         self.define = define
         self.layer_list = []
         for i in range(len(self.define)):
@@ -44,9 +45,19 @@ class ANN:
                     self.layer_list[j].error[0, j] = error_prop[0, j] * diff_sigmoid(self.layer_list[j].inputs[0, j])
 
     def update_weight(self):
-        pass
+        c = 0;
+        for i in range(len(self.layer_list) - 1, 0, -1):
+            for j in range(self.layer_list[i].neurons):
+                c += 1
+                weight_error = self.layer_list[i - 1].outputs * self.layer_list[i].error[0, j]
+                """
+                testing update_weight function
+                print(self.layer_list[i - 1].outputs, "*", self.layer_list[i].error[0, j], "\n")
+                print("shape is -- \n", weight_error.shape)
+                """
+                self.layer_list[i].weights[j] = self.layer_list[i].weights[j] - self.learning_rate * weight_error
 
-    def train(self):
+    def train(self, inputs, target, iterations):
         pass
 
     def print_layer(self):
@@ -55,7 +66,7 @@ class ANN:
             """print("layer input is {}, shape {}\n".format(i.inputs, i.inputs.shape))
             print("layer output is {}, shape {}\n".format(i.outputs, i.outputs.shape))
             print("layer weight is {}, shape {}\n".format(i.weights, i.weights.shape))"""
-            print("error is -- ", i.error, i.error.shape)
+            print("error is -- \n", i.error, i.error.shape)
 
     def print_layer2(self):
         for i in self.layer_list:
@@ -71,11 +82,12 @@ class Layer:
         self.inputs = np.zeros((1, previous_layer_neurons))
         self.outputs = np.zeros((1, neurons))
         self.error = np.zeros((1, neurons))
-        self.weights = np.empty((neurons, previous_layer_neurons))
+        self.weights = np.ones((neurons, previous_layer_neurons))
 
 
-obj = ANN([3, 3, 3, 2])
+obj = ANN([3, 3, 3, 2], 0.1)
 obj.forward_propogation(np.array([[1, 2, 1]]))
 obj.print_layer2()
 obj.backpropogation(np.array([[-1, -1]]))
 obj.print_layer()
+obj.update_weight()
