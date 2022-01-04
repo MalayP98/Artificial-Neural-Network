@@ -79,14 +79,14 @@ class ANN:
                 self.backpropogation(self.target[l].reshape(1, self.target.shape[1]))
                 self.update_weight()
 
-            print(self.layer_list[len(self.define)-1].error)
+            # print(self.layer_list[len(self.define)-1].error)
 
 
 
     def predict(self, test):
         self.test = test
         self.forward_propogation(self.test.reshape(1, self.inputs.shape[1]))
-        print(self.layer_list[len(self.define)-1].outputs)
+        print(self.layer_list[len(self.define)-1].outputs[0][0])
 
 
 
@@ -121,21 +121,9 @@ class Layer:
                 self.weights[i][j] = between(-good_range, good_range)
 
 
-obj = ANN([3, 3, 3, 2], 0.1)
-obj.forward_propogation(np.array([[1, 2, 1]]))
-obj.print_layer2()
-obj.backpropogation(np.array([[-1, -1]]))
-obj.print_layer()
-obj.update_weight()
-
 inputs = np.array([[1,1],[1,0],[0,1],[0,0]])
 target = np.array([[0],[1],[1],[0]])
 obj2 = ANN([2,2,1], 0.1)
-obj2.forward_propogation(np.array([[1,1]]))
-obj2.backpropogation(np.array([[1]]))
-obj2.update_weight()
-obj2.print_layer2()
-obj2.print_layer()
 obj2.train(inputs, target, 20000)
 obj2.predict(np.array([1,1]))
 obj2.predict(np.array([1,0]))
